@@ -1,0 +1,40 @@
+management:
+  server:
+    port: 8081
+    ssl:
+      enabled: false
+  endpoints:
+    web:
+      base-path: /
+server:
+  port: 8080
+  servlet:
+    context-path: /example-rql
+
+spring:
+  h2:
+    console:
+      path: /h2-console
+      enabled: true
+  data:
+    jpa.repositories.enabled: true
+  jpa:
+    open-in-view: false
+    properties:
+      generate-ddl: false
+      hibernate:
+        dialect: org.hibernate.dialect.H2Dialect
+        show_sql: true
+        format_sql: true
+  flyway:
+    enabled: true
+    locations: classpath:db/migration
+    baselineOnMigrate: true
+    out-of-order: true
+  datasource:
+    driverClassName: org.h2.Driver
+    #url: jdbc:h2:mem:userdb
+    url: jdbc:h2:file:./data/example-rql-db
+    username: sa
+    password: password
+    continueOnError: true
