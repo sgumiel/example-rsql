@@ -1,5 +1,6 @@
 package com.gumi.example.rql.users.infrastructure.db.model;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -30,4 +31,7 @@ public class UserEntity implements Serializable {
   private String name;
   private String surname;
   private Boolean active;
+
+  @Column(name = "address_id")
+  private Long addressId;
 }

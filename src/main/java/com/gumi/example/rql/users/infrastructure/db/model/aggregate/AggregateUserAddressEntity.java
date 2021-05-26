@@ -1,10 +1,13 @@
 package com.gumi.example.rql.users.infrastructure.db.model.aggregate;
 
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
 import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
 import java.io.Serializable;
@@ -35,6 +38,7 @@ public class AggregateUserAddressEntity implements Serializable {
   private String surname;
   private Boolean active;
 
-  @OneToMany(mappedBy="userId")
-  private List<AddressEntity> address;
+  @OneToOne(fetch=FetchType.EAGER)
+  @JoinColumn(name="address_id")
+  private AddressEntity address;
 }

@@ -2,6 +2,8 @@ package com.gumi.example.rql.common.infrastructure.db;
 
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Expression;
+import javax.persistence.criteria.Path;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 import java.util.List;
@@ -28,20 +30,20 @@ public class GenericRsqlSpecification<T> implements Specification<T> {
 
       case EQUAL: {
         if (argument instanceof String) {
-          return builder.like(root.get(property), argument.toString().replace('*', '%'));
+          return builder.like(getPath(root, property), argument.toString().replace('*', '%'));
         } else if (argument == null) {
-          return builder.isNull(root.get(property));
+          return builder.isNull(getPath(root, property));
         } else {
-          return builder.equal(root.get(property), argument);
+          return builder.equal(getPath(root, property), argument);
         }
       }
       case NOT_EQUAL: {
         if (argument instanceof String) {
           return builder.notLike(root.<String> get(property), argument.toString().replace('*', '%'));
         } else if (argument == null) {
-          return builder.isNotNull(root.get(property));
+          return builder.isNotNull(getPath(root, property));
         } else {
-          return builder.notEqual(root.get(property), argument);
+          return builder.notEqual(getPath(root, property), argument);
         }
       }
       case GREATER_THAN: {
@@ -57,9 +59,9 @@ public class GenericRsqlSpecification<T> implements Specification<T> {
         return builder.lessThanOrEqualTo(root.<String> get(property), argument.toString());
       }
       case IN:
-        return root.get(property).in(args);
+        return getPath(root, property).in(args);
       case NOT_IN:
-        return builder.not(root.get(property).in(args));
+        return builder.not(getPath(root, property).in(args));
     }
 
     return null;
@@ -67,7 +69,7 @@ public class GenericRsqlSpecification<T> implements Specification<T> {
 
   private List<Object> castArguments(final Root<T> root) {
 
-    Class<? extends Object> type = root.get(property).getJavaType();
+    Class<? extends Object> type = getPath(root, property).getJavaType();
 
     List<Object> args = arguments.stream().map(arg -> {
       if (type.equals(Integer.class)) {
@@ -80,6 +82,25 @@ public class GenericRsqlSpecification<T> implements Specification<T> {
     }).collect(Collectors.toList());
 
     return args;
+  }
+
+  private Expression<String> getPath(Root<?> root, String property){
+    final var nestedProperties = property.split("\\.");
+
+    if(nestedProperties.length>0) {
+
+
+      Path<String> nestedPath = root.get(nestedProperties[0]);
+
+      for (int i = 1; i < nestedProperties.length; i++) {
+        nestedPath = nestedPath.get(nestedProperties[i]);
+
+      }
+      return nestedPath;
+    }
+
+    return root.get(property);
+
   }
 
 }

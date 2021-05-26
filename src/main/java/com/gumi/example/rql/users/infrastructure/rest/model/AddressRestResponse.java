@@ -16,6 +16,5 @@ public class AddressRestResponse implements Serializable {
   private static final long serialVersionUID = 4427561943284149613L;
 
   private Long id;
-  private Long userId;
   private String address;
 }

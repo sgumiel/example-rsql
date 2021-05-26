@@ -1,7 +1,6 @@
 package com.gumi.example.rql.users.infrastructure.rest.model.aggregate;
 
 import java.io.Serializable;
-import java.util.List;
 
 import com.gumi.example.rql.users.infrastructure.rest.model.AddressRestResponse;
 import lombok.AllArgsConstructor;
@@ -22,5 +21,5 @@ public class AggregateUserAddressRestResponse implements Serializable {
   private String name;
   private String surname;
   private Boolean active;
-  private List<AddressRestResponse> address;
+  private AddressRestResponse address;
 }
