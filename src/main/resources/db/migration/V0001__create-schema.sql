@@ -5,3 +5,10 @@ CREATE TABLE usuario (
    surname VARCHAR(20) NOT NULL,
    active BOOLEAN NOT NULL
 );
+
+CREATE TABLE address (
+   id IDENTITY,
+   usuario_id INTEGER NOT NULL,
+   address VARCHAR(100) NOT NULL,
+   FOREIGN KEY (usuario_id) REFERENCES usuario(id)
+);
